@@ -58,27 +58,57 @@ for person in people_list:
     response = requests.get(url, params=params)
     soup = BeautifulSoup(response.text, "html.parser")
     content = soup.find("response")
+    items = content.find("items")
 
-    # 의안명
-    bill_name = [billname.text for billname in content.find_all("billname")]
-    # 제안일자
-    date = [proposedt.text for proposedt in content.find_all("proposedt")]
-    # 의결결과
-    result = [generalresult.text for generalresult in content.find_all("generalresult")]
-    # 주요내용
-    summary = [summary.text for summary in content.find_all("summary")]
-    # 심사진행상태
-    process = [procstagecd.text for procstagecd in content.find_all("procstagecd")]
-
-    for data in zip(bill_name, date, result, summary, process):
+    for item in items:
         sheet.cell(row=idx + 1, column=1).value = person
-        sheet.cell(row=idx + 1, column=2).value = data[0]
-        sheet.cell(row=idx + 1, column=3).value = data[1]
-        sheet.cell(row=idx + 1, column=4).value = data[2]
-        sheet.cell(row=idx + 1, column=5).value = data[3]
-        sheet.cell(row=idx + 1, column=6).value = data[4]
+        sheet.cell(row=idx + 1, column=2).value = (
+            item.find("billname").text if not item.find("billname") is None else ""
+        )
+        sheet.cell(row=idx + 1, column=3).value = (
+            item.find("proposedt").text if not item.find("proposedt") is None else ""
+        )
+        sheet.cell(row=idx + 1, column=4).value = (
+            item.find("generalresult").text
+            if not item.find("generalresult") is None
+            else ""
+        )
+        sheet.cell(row=idx + 1, column=5).value = (
+            item.find("summary").text if not item.find("summary") is None else ""
+        )
+        sheet.cell(row=idx + 1, column=6).value = (
+            item.find("procstagecd").text
+            if not item.find("procstagecd") is None
+            else ""
+        )
         idx += 1
     idx += 1
+    print(f"{len(people_list)}명 중 {people_list.index(person) + 1}번째 입니다.")
 
 excel_file.save(filename="국회의원 입법활동 조사 명단(대표발의).xlsx")
 print("Complete!")
+
+
+#     # 의안명
+#     bill_name = [billname.text for billname in content.find_all("billname")]
+#     # 제안일자
+#     date = [proposedt.text for proposedt in content.find_all("proposedt")]
+#     # 의결결과
+#     result = [generalresult.text for generalresult in content.find_all("generalresult")]
+#     # 주요내용
+#     summary = [summary.text for summary in content.find_all("summary")]
+#     # 심사진행상태
+#     process = [procstagecd.text for procstagecd in content.find_all("procstagecd")]
+#
+#     for data in zip(bill_name, date, result, summary, process):
+#         sheet.cell(row=idx + 1, column=1).value = person
+#         sheet.cell(row=idx + 1, column=2).value = data[0]
+#         sheet.cell(row=idx + 1, column=3).value = data[1]
+#         sheet.cell(row=idx + 1, column=4).value = data[2]
+#         sheet.cell(row=idx + 1, column=5).value = data[3]
+#         sheet.cell(row=idx + 1, column=6).value = data[4]
+#         idx += 1
+#     idx += 1
+#
+# excel_file.save(filename="국회의원 입법활동 조사 명단(대표발의).xlsx")
+# print("Complete!")
