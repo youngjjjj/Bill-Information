@@ -60,21 +60,27 @@ for person in people_list:
     items = content.find("items")
 
     for item in items:
+        # 의원명
         sheet.cell(row=idx + 1, column=1).value = person
+        # 의안명
         sheet.cell(row=idx + 1, column=2).value = (
             item.find("billname").text if not item.find("billname") is None else ""
         )
+        # 제안일자
         sheet.cell(row=idx + 1, column=3).value = (
             item.find("proposedt").text if not item.find("proposedt") is None else ""
         )
+        # 의결결과
         sheet.cell(row=idx + 1, column=4).value = (
             item.find("generalresult").text
             if not item.find("generalresult") is None
             else ""
         )
+        # 주요내용
         sheet.cell(row=idx + 1, column=5).value = (
             item.find("summary").text if not item.find("summary") is None else ""
         )
+        # 심사진행 상태
         sheet.cell(row=idx + 1, column=6).value = (
             item.find("procstagecd").text
             if not item.find("procstagecd") is None
