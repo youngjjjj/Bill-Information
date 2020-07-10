@@ -1,7 +1,6 @@
 import openpyxl
 from bs4 import BeautifulSoup
 from urllib.parse import unquote
-from openpyxl import Workbook
 import requests
 import json
 from people_list import people
